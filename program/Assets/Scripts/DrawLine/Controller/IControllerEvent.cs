@@ -6,8 +6,8 @@ namespace DrawLine {
         void OnClearGame();
         void OnStopGame();
 
-        void OnDrawTile(Tile tile, ColorIndex color);
-        void OnEraseTile(Tile tile);
+        void OnDrawTile(Controller controller, Tile tile, ColorIndex color);
+        void OnEraseTile(Controller controller, Tile tile, ColorIndex originColor);
         void OnClearColor(List<Tile> tilesInLine);
     }
 }

@@ -9,7 +9,6 @@ namespace DrawLine.Test.Editor {
             var controller = new Controller();
             var level = new Level {
                 width = 3,
-                height = 3,
                 tileModels = new List<TileModel> {
                     new TileModel { index = 0, tileType = TileType.Point, answerColor = ColorIndex.Red },
                     new TileModel { index = 1, tileType = TileType.Normal, answerColor = ColorIndex.Yellow },
@@ -104,7 +103,6 @@ namespace DrawLine.Test.Editor {
             var controller = new Controller();
             var level = new Level {
                 width = 3,
-                height = 3,
                 tileModels = new List<TileModel> {
                     new TileModel { index = 0, tileType = TileType.Point, answerColor = ColorIndex.Red },
                     new TileModel { index = 1, tileType = TileType.Normal, answerColor = ColorIndex.Yellow },
@@ -136,7 +134,6 @@ namespace DrawLine.Test.Editor {
             var controller = new Controller();
             var level = new Level {
                 width = 3,
-                height = 3,
                 tileModels = new List<TileModel> {
                     new TileModel { index = 0, tileType = TileType.Point, answerColor = ColorIndex.Red },
                     new TileModel { index = 1, tileType = TileType.Normal, answerColor = ColorIndex.Yellow },

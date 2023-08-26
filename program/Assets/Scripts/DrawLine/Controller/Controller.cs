@@ -8,10 +8,6 @@ using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace DrawLine {
-    public enum GameResult { Clear, Stop }
-    public enum InputType { Down, Up }
-    public enum ColorIndex { None, Red, Orange, Yellow, Green, Blue, Navy, Purple, Brown, Pink, Cyan, SkyBlue }
-    
     public class Controller {
         public Controller() { }
         
@@ -49,7 +45,7 @@ namespace DrawLine {
             Tiles = level.tileModels.Select(tm => new Tile(tm)).ToArray();
             LastDownTile = null;
             drawnLines.Clear();
-            foreach (var color in level.tileModels.Select(tm => tm.answerColor).Distinct()) {
+            foreach (var color in level.tileModels.Select(tm => tm.answerColor).Where(c => c != ColorIndex.None).Distinct()) {
                 drawnLines[color] = new List<Tile>();
             }
 
@@ -97,21 +93,14 @@ namespace DrawLine {
             
             // 터치 불가능한 타일에 한 인풋은 무시한다.
             if (TouchableTiles.Contains(tile) == false) return;
+            if (LastDownTile == tile) return;
 
             // 마지막 드래그중인 타일이 없는 경우
             if (LastDownTile == null) {
-                // 이 경우, 새로운 드래그 시작만 유효하다.
-                if (tile.Type != TileType.Point) return;
+                // 이 경우, 포인트 타일이거나 이미 색깔이 그려진 타일인 경우만 유효하다.
+                if (tile.Color == ColorIndex.None) return;
 
-                var color = tile.Color; // Point 타일이므로 레벨에서 지정한 색깔이 적용될 것이다.
-                // 기존에 그리던 라인이 있던 경우 모두 지운다.
-                if (drawnLines.TryGetValue(color, out var tilesInExistedLine)) {
-                    foreach (var existTile in tilesInExistedLine.Reversed()) {
-                        EraseTile(existTile);
-                    }
-                }
-
-                DrawTile(tile, color);
+                EraseUntilThisAndDraw(tile, tile.Color, tile.Color);
                 return;
             }
             
@@ -127,34 +116,25 @@ namespace DrawLine {
                 return;
             }
             
-            // 다른 색깔로 드래그한 경우
+            // 댜른 색깔이 있는 타일에 드래그한 경우
             if (tile.Color != onGoingColor) {
                 // 다른 색깔의 포인트로 드래그한 경우는 인풋을 무시한다.
                 if (tile.Type == TileType.Point) return;
                 
-                // 포인트가 아닌 그려진 색깔인 경우, 기존에 그려진 라인을 이 타일까지 먼저 지운 후 컬러를 그려준다.
-                if (drawnLines.TryGetValue(tile.Color, out var tilesInOtherColorLine)) {
-                    foreach (var existTile in tilesInOtherColorLine.Reversed()) {
-                        EraseTile(existTile);
-                        if (existTile == tile) break; // 인풋한 타일까지만 지운다.
-                    }
-                }
-                
-                DrawTile(tile, onGoingColor);
+                // 이미 칠했던 타일에 다른 색깔로 드래그한 경우, 다른 색깔 라인을 현재 타일까지 지운 후 이 색깔을 덮어쓴다.
+                EraseUntilThisAndDraw(tile, tile.Color, onGoingColor);
                 return;
             }
             
-            // 같은 색깔로 드래그한 경우
             var tilesInSameColorLine = drawnLines[onGoingColor];
-            // 이미 칠했던 타일에 드래그한 경우
+            // 이미 칠했던 타일에 같은 색깔로 드래그한 경우
             if (tilesInSameColorLine.Contains(tile)) {
                 // 이 타일까지 먼저 지우고 진행한다
-                foreach (var existTile in tilesInSameColorLine.Reversed()) {
-                    EraseTile(existTile);
-                    if (existTile == tile) break; // 인풋한 타일까지만 지운다.
-                }
+                EraseUntilThisAndDraw(tile, onGoingColor, onGoingColor);
+                return;
             }
             
+            // 아직 칠해지지 않은 타일에 드래그한 경우
             DrawTile(tile, onGoingColor);
             
             // 색깔을 포인트에서 포인트까지 완성한 경우
@@ -168,6 +148,17 @@ namespace DrawLine {
                 gameCompletionSource.TrySetResult(GameResult.Clear);
                 foreach (var listener in Listeners) listener.OnClearGame();
             }
+
+            void EraseUntilThisAndDraw(Tile targetTile, ColorIndex colorToErase, ColorIndex colorToDraw) {
+                if (drawnLines.TryGetValue(colorToErase, out var tilesInLine)) {
+                    foreach (var existTile in tilesInLine.Reversed()) {
+                        EraseTile(existTile);
+                        if (existTile == targetTile) break; // 타겟 타일까지만 지운다.
+                    }
+                }
+                
+                DrawTile(targetTile, colorToDraw);
+            } 
         }
 
         public bool IsCleared() {
@@ -180,6 +171,8 @@ namespace DrawLine {
 
             return tilesInLie.Count(t => t.Type == TileType.Point) == 2;
         }
+
+        public Direction GetDirection(Tile from, Tile to) => from.GetDirection(to, CurrentLevel.width);
 
         private void DrawTile(Tile tile, ColorIndex drawColor) {
             tile.Color = drawColor;
@@ -196,7 +189,7 @@ namespace DrawLine {
             drawnLines[drawColor].Add(tile);
             LastDownTile = tile;
             
-            foreach (var listener in Listeners) listener.OnDrawTile(tile, drawColor);
+            foreach (var listener in Listeners) listener.OnDrawTile(this, tile, drawColor);
 
             bool IsValid() => drawnLines[drawColor].Contains(tile) == false;
         }
@@ -212,7 +205,7 @@ namespace DrawLine {
 
             drawnLines[originColor].Remove(tile);
             
-            foreach (var listener in Listeners) listener.OnEraseTile(tile);
+            foreach (var listener in Listeners) listener.OnEraseTile(this, tile, originColor);
 
             bool IsValid() => drawnLines.ContainsKey(originColor)
                               && drawnLines[originColor] != null 
