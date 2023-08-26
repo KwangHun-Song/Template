@@ -18,6 +18,6 @@
 
 ## 게임 플레이 영상
 
-![DrawLine 게임 플레이 영상](https://github.com/KwangHun-Song/DrawLine/blob/main/program/Recordings/001.mp4)
+![DrawLine 게임 플레이 영상](https://github.com/KwangHun-Song/DrawLine/blob/main/program/Recordings/001.gif)
 
 즐거운 게임 플레이를 바랍니다!
