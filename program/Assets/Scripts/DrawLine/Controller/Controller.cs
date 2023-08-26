@@ -49,12 +49,19 @@ namespace DrawLine {
             Tiles = level.tileModels.Select(tm => new Tile(tm)).ToArray();
             LastDownTile = null;
             drawnLines.Clear();
+            foreach (var color in level.tileModels.Select(tm => tm.answerColor).Distinct()) {
+                drawnLines[color] = new List<Tile>();
+            }
 
             // 게임 시작
             gameCompletionSource = new UniTaskCompletionSource<GameResult>();
             
             // 이벤트 전달
             foreach (var listener in Listeners) listener.OnStartGame(this);
+        }
+
+        public void RestartGame() {
+            StartGame(CurrentLevel);
         }
 
         public async UniTask<GameResult> WaitUntilGameEnd() {
@@ -77,20 +84,19 @@ namespace DrawLine {
             foreach (var listener in Listeners) listener.OnStopGame();
         }
 
-        private bool IsCleared() {
-            if (TouchableTiles.Any(t => t.Color == ColorIndex.None)) return false;
-            return DrawnLines.Select(kvp => kvp.Key).All(IsConnectedTwoPoints) == true;
-        }
-
+        public Tile GetTile(int index) => Tiles.SingleOrDefault(t => t.Index == index);
+        
+        public void Input(InputType inputType, int index) => Input(inputType, GetTile(index));
+        public void InputUp() => Input(InputType.Up, null);
         public void Input(InputType inputType, Tile tile) {
-            // 터치 불가능한 타일에 한 인풋은 무시한다.
-            if (TouchableTiles.Contains(tile) == false) return;
-            
             // 손가락을 뗀 인풋의 경우, 마지막 드래그중인 타일만 무시하고 추가 적용은 없다.
             if (inputType == InputType.Up) {
                 LastDownTile = null;
                 return;
             }
+            
+            // 터치 불가능한 타일에 한 인풋은 무시한다.
+            if (TouchableTiles.Contains(tile) == false) return;
 
             // 마지막 드래그중인 타일이 없는 경우
             if (LastDownTile == null) {
@@ -100,7 +106,7 @@ namespace DrawLine {
                 var color = tile.Color; // Point 타일이므로 레벨에서 지정한 색깔이 적용될 것이다.
                 // 기존에 그리던 라인이 있던 경우 모두 지운다.
                 if (drawnLines.TryGetValue(color, out var tilesInExistedLine)) {
-                    foreach (var existTile in tilesInExistedLine) {
+                    foreach (var existTile in tilesInExistedLine.Reversed()) {
                         EraseTile(existTile);
                     }
                 }
@@ -128,7 +134,7 @@ namespace DrawLine {
                 
                 // 포인트가 아닌 그려진 색깔인 경우, 기존에 그려진 라인을 이 타일까지 먼저 지운 후 컬러를 그려준다.
                 if (drawnLines.TryGetValue(tile.Color, out var tilesInOtherColorLine)) {
-                    foreach (var existTile in tilesInOtherColorLine) {
+                    foreach (var existTile in tilesInOtherColorLine.Reversed()) {
                         EraseTile(existTile);
                         if (existTile == tile) break; // 인풋한 타일까지만 지운다.
                     }
@@ -143,7 +149,7 @@ namespace DrawLine {
             // 이미 칠했던 타일에 드래그한 경우
             if (tilesInSameColorLine.Contains(tile)) {
                 // 이 타일까지 먼저 지우고 진행한다
-                foreach (var existTile in tilesInSameColorLine) {
+                foreach (var existTile in tilesInSameColorLine.Reversed()) {
                     EraseTile(existTile);
                     if (existTile == tile) break; // 인풋한 타일까지만 지운다.
                 }
@@ -164,6 +170,17 @@ namespace DrawLine {
             }
         }
 
+        public bool IsCleared() {
+            if (TouchableTiles.Any(t => t.Color == ColorIndex.None)) return false;
+            return DrawnLines.Select(kvp => kvp.Key).All(IsConnectedTwoPoints) == true;
+        }
+
+        public bool IsConnectedTwoPoints(ColorIndex color) {
+            if (drawnLines.TryGetValue(color, out var tilesInLie) == false) return false;
+
+            return tilesInLie.Count(t => t.Type == TileType.Point) == 2;
+        }
+
         private void DrawTile(Tile tile, ColorIndex drawColor) {
             tile.Color = drawColor;
             
@@ -177,6 +194,7 @@ namespace DrawLine {
             } 
             
             drawnLines[drawColor].Add(tile);
+            LastDownTile = tile;
             
             foreach (var listener in Listeners) listener.OnDrawTile(tile, drawColor);
 
@@ -199,12 +217,6 @@ namespace DrawLine {
             bool IsValid() => drawnLines.ContainsKey(originColor)
                               && drawnLines[originColor] != null 
                               && drawnLines[originColor].Contains(tile);
-        }
-
-        private bool IsConnectedTwoPoints(ColorIndex color) {
-            if (drawnLines.TryGetValue(color, out var tilesInLie) == false) return false;
-
-            return tilesInLie.Count(t => t.Type == TileType.Point) == 2;
         }
 
         private (int x, int y) GetCo(Tile tile) {
