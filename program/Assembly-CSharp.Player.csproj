@@ -45,12 +45,34 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.0f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\DrawLine\Controller\Controller.cs" />
-     <Compile Include="Assets\Scripts\DrawLine\Controller\Level.cs" />
-     <Compile Include="Assets\Scripts\DrawLine\Controller\Tile.cs" />
-     <Compile Include="Assets\Scripts\DrawLine\Controller\CollectionExtensions.cs" />
-     <Compile Include="Assets\Scripts\DrawLine\Controller\TileModel.cs" />
-     <Compile Include="Assets\Scripts\DrawLine\Controller\IControllerEvent.cs" />
+     <Compile Include="Assets\Scripts\Game\Controller\Level.cs" />
+     <Compile Include="Assets\Scripts\Game\Controller\Utility\CollectionExtensions.cs" />
+     <Compile Include="Assets\DOTween\Modules\DOTweenModuleAudio.cs" />
+     <Compile Include="Assets\Scripts\Game\Controller\Utility\DotweenExtension.cs" />
+     <Compile Include="Assets\DOTween\Modules\DOTweenModuleUnityVersion.cs" />
+     <Compile Include="Assets\System\PagePopupSystem\Transition\FadeOutHelper.cs" />
+     <Compile Include="Assets\DOTween\Modules\DOTweenModulePhysics.cs" />
+     <Compile Include="Assets\Scripts\Game\Controller\TileModel.cs" />
+     <Compile Include="Assets\Scripts\Pages\PlayPage.cs" />
+     <Compile Include="Assets\System\PagePopupSystem\PopupSystem\PopupHandler.cs" />
+     <Compile Include="Assets\System\PagePopupSystem\PageSystem\PageHandler.cs" />
+     <Compile Include="Assets\Scripts\Game\Controller\Tile.cs" />
+     <Compile Include="Assets\System\ScreenLock\ScreenLock.cs" />
+     <Compile Include="Assets\Scripts\Game\View\GameView.cs" />
+     <Compile Include="Assets\DOTween\Modules\DOTweenModulePhysics2D.cs" />
+     <Compile Include="Assets\DOTween\Modules\DOTweenModuleUI.cs" />
+     <Compile Include="Assets\DOTween\Modules\DOTweenModuleSprite.cs" />
+     <Compile Include="Assets\System\PagePopupSystem\PopupSystem\PopupManager.cs" />
+     <Compile Include="Assets\Scripts\Game\Controller\IControllerEvent.cs" />
+     <Compile Include="Assets\Scripts\Game\Controller\Controller.cs" />
+     <Compile Include="Assets\System\CustomMouse\CustomMouse.cs" />
+     <Compile Include="Assets\DOTween\Modules\DOTweenModuleEPOOutline.cs" />
+     <Compile Include="Assets\Scripts\Game\View\TileView\TileView.cs" />
+     <Compile Include="Assets\Scripts\Game\View\AnimationQueue.cs" />
+     <Compile Include="Assets\System\PagePopupSystem\PageSystem\PageManager.cs" />
+     <Compile Include="Assets\DOTween\Modules\DOTweenModuleUtils.cs" />
+     <Compile Include="Assets\Scripts\Game\Controller\Enums.cs" />
+     <Compile Include="Assets\System\PagePopupSystem\Transition\FadeTransition.cs" />
      <Reference Include="UnityEngine">
      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.0f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\Variations\mono\Managed\UnityEngine.dll</HintPath>
      </Reference>
@@ -252,11 +274,14 @@
      <Reference Include="UnityEngine.XRModule">
      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.0f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\Variations\mono\Managed\UnityEngine.XRModule.dll</HintPath>
      </Reference>
+     <Reference Include="DOTween">
+     <HintPath>C:\Users\overg\Projects\Template\program\Assets\DOTween\DOTween.dll</HintPath>
+     </Reference>
      <Reference Include="Unity.Collections.LowLevel.ILSupport">
-     <HintPath>C:\Users\overg\Projects\DrawLine\program\Library\PackageCache\com.unity.collections@1.2.4\Unity.Collections.LowLevel.ILSupport\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
+     <HintPath>C:\Users\overg\Projects\Template\program\Library\PackageCache\com.unity.collections@1.2.4\Unity.Collections.LowLevel.ILSupport\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
      </Reference>
      <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
-     <HintPath>C:\Users\overg\Projects\DrawLine\program\Library\PackageCache\com.unity.visualscripting@1.8.0\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
+     <HintPath>C:\Users\overg\Projects\Template\program\Library\PackageCache\com.unity.visualscripting@1.8.0\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
      </Reference>
      <Reference Include="netstandard">
      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.0f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>
@@ -626,6 +651,10 @@
      </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Unity.PlayerPrefsEditor.Samples.SampleScene.Player.csproj">
+      <Project>{19e3cc54-15cb-d2b8-c827-f53f8b539eaa}</Project>
+      <Name>Unity.PlayerPrefsEditor.Samples.SampleScene.Player</Name>
+    </ProjectReference>
     <ProjectReference Include="UniTask.Addressables.Player.csproj">
       <Project>{84347f25-a61f-56c9-a2a4-d7ec919a644b}</Project>
       <Name>UniTask.Addressables.Player</Name>
@@ -641,6 +670,10 @@
     <ProjectReference Include="Unity.Burst.Player.csproj">
       <Project>{535a75e5-7792-3e12-38b3-244011dacc1d}</Project>
       <Name>Unity.Burst.Player</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Recorder.Base.Player.csproj">
+      <Project>{3db7cc9c-d3ca-6d5e-efec-62cfe20f2920}</Project>
+      <Name>Unity.Recorder.Base.Player</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.VisualScripting.Core.Player.csproj">
       <Project>{b2b8ee80-8ba1-74ca-4f0d-1dc1c42228e4}</Project>
@@ -701,6 +734,10 @@
     <ProjectReference Include="Unity.TextMeshPro.Player.csproj">
       <Project>{74ad18fc-31f0-f50a-0598-a0f8d283cb45}</Project>
       <Name>Unity.TextMeshPro.Player</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Recorder.Player.csproj">
+      <Project>{c8d3fa45-330d-eacb-b03a-50ff1e80e267}</Project>
+      <Name>Unity.Recorder.Player</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.VisualScripting.State.Player.csproj">
       <Project>{14568ded-1247-d61f-d804-a886c4e1861f}</Project>

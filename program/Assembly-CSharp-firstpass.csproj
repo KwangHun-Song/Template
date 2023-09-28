@@ -41,9 +41,13 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Folder Include="Assets\Plugins\PlayerPrefsEditor\Samples" />
      <None Include="Assets\Plugins\UniTask\package.json" />
      <Folder Include="Assets\Plugins" />
+     <Folder Include="Assets\Plugins\PlayerPrefsEditor\Documentation\Images" />
+     <Folder Include="Assets\Plugins\PlayerPrefsEditor\Documentation" />
      <Folder Include="Assets\Plugins\UniTask" />
+     <Folder Include="Assets\Plugins\PlayerPrefsEditor" />
      <Reference Include="UnityEngine">
      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.0f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
      </Reference>

@@ -364,7 +364,7 @@
      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.0f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Burst.Unsafe">
-     <HintPath>C:\Users\overg\Projects\DrawLine\program\Library\PackageCache\com.unity.burst@1.8.4\Unity.Burst.Unsafe.dll</HintPath>
+     <HintPath>C:\Users\overg\Projects\Template\program\Library\PackageCache\com.unity.burst@1.8.4\Unity.Burst.Unsafe.dll</HintPath>
      </Reference>
      <Reference Include="netstandard">
      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.0f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>
